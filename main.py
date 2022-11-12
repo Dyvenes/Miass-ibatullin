@@ -12,19 +12,34 @@ class Chess(QWidget, Ui_Form):
         super().__init__()
         self.setupUi(self)
         self.do_paint = False
-        self.pushButton.clicked.connect(self.drawCircle)
+        self.yellow = False
+        self.pushButton.clicked.connect(self.YellowCircle)
+        self.pushButton_2.clicked.connect(self.RandomCircle)
 
-    def drawCircle(self):
+    def YellowCircle(self):
         self.do_paint = True
+        self.yellow = True
+        self.repaint()
+
+    def RandomCircle(self):
+        self.do_paint = True
+        self.yellow = False
         self.repaint()
 
     def paintEvent(self, event):
         if self.do_paint:
             qp = QPainter()
             qp.begin(self)
-            qp.setBrush(QColor('yellow'))
+            if self.yellow:
+                color = QColor('yellow')
+            else:
+                color = QColor(random.randint(0, 0xffffff))
+            qp.setBrush(QColor(color))
             r = random.randint(20, 100)
-            qp.drawEllipse(QPoint(200, 200), r, r)
+            w = self.width()
+            h = self.height()
+            qp.drawEllipse(QPoint(random.randint(r, w - r),
+                                  random.randint(r, h - r)), r, r)
             qp.end()
             self.do_paint = False
 
